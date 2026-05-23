@@ -53,7 +53,7 @@ No. This plugin is designed specifically for the Divi theme.
 
 = Does this replace the default Divi mobile menu? =
 
-Yes. It hides the default Divi mobile hamburger and replaces it with a slide-in panel.
+Yes. It hides the default Divi mobile hamburger and replaces it with a slide-in panel. 
 
 = Can I customize the animation direction? =
 
