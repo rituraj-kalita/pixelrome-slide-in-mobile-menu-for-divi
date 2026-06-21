@@ -12,9 +12,43 @@ class PRDSM_Admin {
 		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_assets' ) );
+
 		add_filter(
 			'plugin_action_links_' . plugin_basename( PRDSM_PLUGIN_FILE ),
 			array( $this, 'add_settings_link' )
+		);
+	}
+
+	/**
+	 * Load admin assets only on plugin settings page.
+	 *
+	 * Prevents unnecessary asset loading across wp-admin.
+	 *
+	 * @param string $hook Current admin page hook suffix.
+	 *
+	 * @return void
+	 */
+	public function enqueue_admin_assets( $hook ) {
+	
+		// Only load assets on plugin settings page.
+		if ( 'toplevel_page_prdsm-settings' !== $hook ) {
+			return;
+		}
+	
+		wp_enqueue_style(
+			'prdsm-admin-style',
+			PRDSM_URL . 'assets/css/prdsm-admin.css',
+			array(),
+			PRDSM_VERSION
+		);
+	
+		wp_enqueue_script(
+			'prdsm-admin-script',
+			PRDSM_URL . 'assets/js/prdsm-admin.js',
+			array(),
+			PRDSM_VERSION,
+			true
 		);
 	}
 
@@ -141,11 +175,36 @@ class PRDSM_Admin {
 		);
 
 		add_settings_field(
-			'close_on_click',
-			esc_html__( 'Close on Link Click', 'pixelrome-slide-in-mobile-menu-for-divi' ),
-			array( $this, 'render_close_field' ),
+			'slide_direction',
+			esc_html__( 'Slide Direction', 'pixelrome-slide-in-mobile-menu-for-divi' ),
+			array( $this, 'render_slide_direction_field' ),
 			'prdsm-settings',
 			'prdsm_main_section'
+		);
+
+		/**
+		 * Responsive Breakpoint Control
+		 *
+		 * Controls the viewport width where
+		 * the custom mobile menu activates.
+		 */
+		add_settings_field(
+			'breakpoint',
+			esc_html__( 'Responsive Breakpoint', 'pixelrome-slide-in-mobile-menu-for-divi' ),
+			array( $this, 'render_breakpoint_field' ),
+			'prdsm-settings',
+			'prdsm_main_section'
+		);
+
+		add_settings_field(
+			'hamburger_style',
+			__(
+				'Hamburger Icon Style',
+				'pixelrome-slide-in-mobile-menu-for-divi'
+			),
+			array( $this, 'render_hamburger_style_field' ),
+			'prdsm-settings',
+			'prdsm_design_section'
 		);
 	}
 
@@ -167,7 +226,6 @@ class PRDSM_Admin {
 		$sanitized['menu_inner_padding'] = isset( $input['menu_inner_padding'] ) ? absint( $input['menu_inner_padding'] ) : 30;
 		$sanitized['menu_item_spacing']  = isset( $input['menu_item_spacing'] ) ? absint( $input['menu_item_spacing'] ) : 12;
 		$sanitized['menu_width']         = isset( $input['menu_width'] ) ? absint( $input['menu_width'] ) : 300;
-		$sanitized['close_on_click']     = isset( $input['close_on_click'] ) ? 1 : 0;
 
 		return $sanitized;
 	}
@@ -181,7 +239,6 @@ class PRDSM_Admin {
 			'enable_menu'        => 1,
 			'selected_menu'      => 0,
 			'menu_width'         => 300,
-			'close_on_click'     => 1,
 			'hamburger_color'    => '#000000',
 			'close_icon_color'   => '#000000',
 			'menu_bg_color'      => '#333333',
@@ -251,6 +308,154 @@ class PRDSM_Admin {
 		<input type="color"
 			   name="<?php echo esc_attr( $this->option_name ); ?>[menu_bg_color]"
 			   value="<?php echo esc_attr( $options['menu_bg_color'] ); ?>" />
+		<?php
+	}
+
+	/**
+	 * Render overlay color field.
+	 *
+	 * @return void
+	 */
+	public function render_overlay_color_field() {
+
+		$options = $this->get_settings();
+
+		?>
+
+		<input
+			type="color"
+			name="<?php echo esc_attr( $this->option_name ); ?>[overlay_color]"
+			value="<?php echo esc_attr( $options['overlay_color'] ); ?>"
+		/>
+
+		<?php
+	}
+
+	/**
+	 * Render overlay opacity field.
+	 *
+	 * @return void
+	 */
+	public function render_overlay_opacity_field() {
+
+		$options = $this->get_settings();
+
+		$opacity = isset( $options['overlay_opacity'] )
+			? absint( $options['overlay_opacity'] )
+			: 60;
+
+		?>
+
+		<div class="prdsm-range-control">
+
+			<input
+				type="range"
+				min="0"
+				max="100"
+				step="1"
+				class="prdsm-range-slider"
+				id="prdsm-overlay-opacity-slider"
+				name="<?php echo esc_attr( $this->option_name ); ?>[overlay_opacity]"
+				value="<?php echo esc_attr( $opacity ); ?>"
+			/>
+
+			<div class="prdsm-range-values">
+
+				<span>0%</span>
+
+				<div class="prdsm-breakpoint-input-wrap">
+
+					<input
+						type="number"
+						min="0"
+						max="100"
+						step="1"
+						class="prdsm-breakpoint-input"
+						id="prdsm-overlay-opacity-input"
+						value="<?php echo esc_attr( $opacity ); ?>"
+					/>
+
+					<span class="prdsm-breakpoint-unit">
+						%
+					</span>
+
+				</div>
+
+				<span>100%</span>
+
+			</div>
+
+		</div>
+
+		<?php
+	}
+
+	/**
+	 * Render animation speed field.
+	 *
+	 * @return void
+	 */
+	public function render_animation_speed_field() {
+
+		$options = $this->get_settings();
+
+		$animation_speed = isset(
+			$options['animation_speed']
+		)
+			? absint(
+				$options['animation_speed']
+			)
+			: 300;
+
+		?>
+
+		<div class="prdsm-range-control">
+
+			<input
+				type="range"
+				min="100"
+				max="1000"
+				step="10"
+				class="prdsm-range-slider"
+				id="prdsm-animation-speed-slider"
+				name="<?php echo esc_attr(
+					$this->option_name
+				); ?>[animation_speed]"
+				value="<?php echo esc_attr(
+					$animation_speed
+				); ?>"
+			/>
+
+			<div class="prdsm-range-values">
+
+				<span>100ms</span>
+
+				<div class="prdsm-breakpoint-input-wrap">
+
+					<input
+						type="number"
+						min="100"
+						max="1000"
+						step="10"
+						class="prdsm-breakpoint-input"
+						id="prdsm-animation-speed-input"
+						value="<?php echo esc_attr(
+							$animation_speed
+						); ?>"
+					/>
+
+					<span class="prdsm-breakpoint-unit">
+						ms
+					</span>
+
+				</div>
+
+				<span>1000ms</span>
+
+			</div>
+
+		</div>
+
 		<?php
 	}
 
@@ -327,13 +532,155 @@ class PRDSM_Admin {
 		<?php
 	}
 
-	public function render_close_field() {
+	/**
+	 * Render slide direction select field.
+	 *
+	 * Controls the direction from which
+	 * the mobile menu panel enters.
+	 *
+	 * @return void
+	 */
+	public function render_slide_direction_field() {
+
 		$options = $this->get_settings();
+
 		?>
-		<input type="checkbox"
-			   name="<?php echo esc_attr( $this->option_name ); ?>[close_on_click]"
-			   value="1"
-			   <?php checked( 1, $options['close_on_click'] ); ?> />
+
+		<select
+			name="<?php echo esc_attr( $this->option_name ); ?>[slide_direction]"
+		>
+
+			<option
+				value="right"
+				<?php selected( $options['slide_direction'], 'right' ); ?>
+			>
+				<?php esc_html_e( 'Right to Left', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
+			</option>
+
+			<option
+				value="left"
+				<?php selected( $options['slide_direction'], 'left' ); ?>
+			>
+				<?php esc_html_e( 'Left to Right', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
+			</option>
+
+		</select>
+
+		<?php
+	}
+
+	/**
+	 * Render responsive breakpoint slider field.
+	 */
+	public function render_breakpoint_field() {
+
+		$options = $this->get_settings();
+
+		$breakpoint = isset( $options['breakpoint'] )
+			? absint( $options['breakpoint'] )
+			: 980;
+
+		?>
+
+		<div class="prdsm-range-control">
+
+			<input
+				type="range"
+				min="480"
+				max="1600"
+				step="1"
+				class="prdsm-range-slider"
+				id="prdsm-breakpoint-slider"
+				name="<?php echo esc_attr( $this->option_name ); ?>[breakpoint]"
+				value="<?php echo esc_attr( $breakpoint ); ?>"
+			/>
+
+			<div class="prdsm-range-values">
+
+				<span class="prdsm-range-min">
+					480px
+				</span>
+
+				<div class="prdsm-breakpoint-input-wrap">
+
+					<input
+						type="number"
+						min="480"
+						max="1600"
+						step="1"
+						class="prdsm-breakpoint-input"
+						id="prdsm-breakpoint-input"
+						value="<?php echo esc_attr( $breakpoint ); ?>"
+					/>
+							
+					<span class="prdsm-breakpoint-unit">
+						px
+					</span>
+							
+				</div>
+
+				<span class="prdsm-range-max">
+					1600px
+				</span>
+
+			</div>
+
+		</div>
+
+		<?php
+	}
+
+	/**
+	 * Render hamburger icon style field.
+	 *
+	 * @return void
+	 */
+	public function render_hamburger_style_field() {
+
+		$options = $this->get_settings();
+
+		$current_style = isset( $options['hamburger_style'] )
+			? sanitize_key( $options['hamburger_style'] )
+			: 'classic';
+
+		?>
+
+		<select
+			id="prdsm-hamburger-style"
+			name="<?php echo esc_attr( $this->option_name ); ?>[hamburger_style]"
+		>
+
+			<option value="classic" <?php selected( $current_style, 'classic' ); ?>>
+				<?php esc_html_e( 'Classic', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
+			</option>
+
+			<option value="modern" <?php selected( $current_style, 'modern' ); ?>>
+				<?php esc_html_e( 'Modern', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
+			</option>
+
+			<option value="split" <?php selected( $current_style, 'split' ); ?>>
+				<?php esc_html_e( 'Split', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
+			</option>
+
+			<option value="two-bar" <?php selected( $current_style, 'two-bar' ); ?>>
+				<?php esc_html_e( 'Two Bar', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
+			</option>
+						
+			<option value="right-align" <?php selected( $current_style, 'right-align' ); ?>>
+				<?php esc_html_e( 'Right Align', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
+			</option>
+
+		</select>
+
+		<p class="description">
+			<?php
+			esc_html_e(
+				'Choose a modern hamburger icon style for the mobile menu toggle.',
+				'pixelrome-slide-in-mobile-menu-for-divi'
+			);
+			?>
+		</p>
+
 		<?php
 	}
 
@@ -345,6 +692,26 @@ class PRDSM_Admin {
 		?>
 
 		<div class="wrap">
+
+			<div class="prdsm-admin-page-header">
+
+				<div class="prdsm-admin-page-title">
+					<?php esc_html_e(
+						'PIXELROME – Slide-In Mobile Menu for Divi',
+						'pixelrome-slide-in-mobile-menu-for-divi'
+					); ?>
+				</div>
+							
+				<p class="prdsm-admin-page-description">
+					<?php esc_html_e(
+						'Create beautiful responsive slide-in navigation menus for Divi with pixel-perfect breakpoint control, sticky header support, and modern customization options.',
+						'pixelrome-slide-in-mobile-menu-for-divi'
+					); ?>
+				</p>
+							
+			</div>
+
+			<h1 style="display:none"></h1>  <!-- anchor for WP notice mover -->
 
 			<?php
 				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -360,15 +727,407 @@ class PRDSM_Admin {
 				</div>
 			<?php endif; ?>
 
-			<h1><?php esc_html_e( 'PIXELROME – Slide-In Mobile Menu for Divi', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?></h1>
+			<div class="prdsm-admin-layout">
+				<form method="post" action="options.php">
+					<?php
+					settings_fields( 'prdsm_settings_group' );
+					$this->render_settings_fields();
+					submit_button();
+					?>
+				</form>
 
-			<form method="post" action="options.php">
-				<?php
-				settings_fields( 'prdsm_settings_group' );
-				do_settings_sections( 'prdsm-settings' );
-				submit_button();
-				?>
-			</form>
+				
+
+			</div>
+		</div>
+
+		<?php
+	}
+
+	/**
+	 * Render PRO badge.
+	 *
+	 * @return void
+	 */
+	private function render_pro_badge() {
+		?>
+		<span class="prdsm-pro-badge">
+			PRO
+		</span>
+		<?php
+	}
+
+	/**
+	 * Open PRO field wrapper.
+	 *
+	 * @return void
+	 */
+	private function pro_field_start( $field_class = '' ) {
+		echo '<div class="prdsm-pro-field ' . esc_attr( $field_class ) . '">';
+	}
+
+	/**
+	 * Close PRO field wrapper.
+	 *
+	 * @return void
+	 */
+	private function pro_field_end() {
+		?>
+		</div>
+		<?php
+	}
+	
+	/**
+	 * Render custom settings UI.
+	 *
+	 * We intentionally render settings manually instead of relying on
+	 * do_settings_sections() so we can build a scalable accordion-based
+	 * admin interface for future Pro features.
+	 */
+	public function render_settings_fields() {
+
+		?>
+
+		<div class="prdsm-admin-sections">
+
+			<!-- General Settings Section -->
+			<div class="prdsm-admin-section active">
+
+				<button
+					type="button"
+					class="prdsm-admin-section-toggle"
+					aria-expanded="true"
+				>
+					<span class="prdsm-admin-section-title">
+						<?php esc_html_e( 'General Settings', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
+					</span>
+
+					<span class="prdsm-admin-section-icon"></span>
+				</button>
+
+				<div class="prdsm-admin-section-content">
+
+					<table class="form-table" role="presentation">
+
+						<!-- Enable Menu -->
+						<tr>
+							<th scope="row">
+								<?php esc_html_e( 'Enable Slide Menu', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
+							</th>
+
+							<td>
+								<?php $this->render_enable_field(); ?>
+							</td>
+						</tr>
+
+						<!-- WordPress Menu Selection -->
+						<tr>
+							<th scope="row">
+								<?php esc_html_e( 'Select Menu', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
+							</th>
+
+							<td>
+								<?php $this->render_menu_field(); ?>
+							</td>
+						</tr>
+
+						<tr>
+							<th scope="row">
+								<?php esc_html_e( 'Responsive Breakpoint', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
+							</th>
+
+							<td>
+
+								<?php $this->pro_field_start( 'prdsm-pro-responsive-breakpoint' ); ?>
+
+									<?php $this->render_breakpoint_field(); ?>
+									<?php $this->render_pro_badge(); ?>
+
+								<?php $this->pro_field_end(); ?>
+
+							</td>
+						</tr>
+
+					</table>
+
+				</div>
+
+			</div>
+
+			<!-- Layout Settings Section -->
+			<div class="prdsm-admin-section">
+
+				<button
+					type="button"
+					class="prdsm-admin-section-toggle"
+					aria-expanded="false"
+				>
+					<span class="prdsm-admin-section-title">
+						<?php esc_html_e( 'Layout Settings', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
+					</span>
+
+					<span class="prdsm-admin-section-icon"></span>
+				</button>
+
+				<div class="prdsm-admin-section-content">
+
+					<table class="form-table" role="presentation">
+
+						<!-- Menu Width -->
+						<tr>
+							<th scope="row">
+								<?php esc_html_e( 'Menu Width (px)', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
+							</th>
+
+							<td>
+								<?php $this->render_width_field(); ?>
+							</td>
+						</tr>
+
+						<!-- Menu Inner Padding -->
+						<tr>
+							<th scope="row">
+								<?php esc_html_e( 'Menu Inner Padding (px)', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
+							</th>
+
+							<td>
+								<?php $this->render_inner_padding_field(); ?>
+							</td>
+						</tr>
+
+						<!-- Menu Item Spacing -->
+						<tr>
+							<th scope="row">
+								<?php esc_html_e( 'Menu Item Vertical Spacing (px)', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
+							</th>
+
+							<td>
+								<?php $this->render_item_spacing_field(); ?>
+							</td>
+						</tr>
+
+						<!-- Slide Direction -->
+						<tr>
+							<th scope="row">
+								<?php esc_html_e( 'Slide Direction', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
+							</th>
+										
+							<td>
+
+								<?php $this->pro_field_start( 'prdsm-pro-slide-direction' ); ?>
+											
+									<?php $this->render_slide_direction_field(); ?>
+									<?php $this->render_pro_badge(); ?>
+											
+								<?php $this->pro_field_end(); ?>
+											
+							</td>
+						</tr>
+
+					</table>
+
+				</div>
+
+			</div>
+
+			<!-- Design Settings Section -->
+			<div class="prdsm-admin-section">
+							
+				<button
+					type="button"
+					class="prdsm-admin-section-toggle"
+					aria-expanded="false"
+				>
+					<span class="prdsm-admin-section-title">
+						<?php esc_html_e( 'Design Settings', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
+					</span>
+							
+					<span class="prdsm-admin-section-icon"></span>
+				</button>
+							
+				<div class="prdsm-admin-section-content">
+							
+					<table class="form-table" role="presentation">
+							
+						<!-- Hamburger Icon Color -->
+						<tr>
+							<th scope="row">
+								<?php esc_html_e( 'Hamburger Icon Color', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
+							</th>
+							
+							<td>
+								<?php $this->render_hamburger_color_field(); ?>
+							</td>
+						</tr>
+							
+						<!-- Close Icon Color -->
+						<tr>
+							<th scope="row">
+								<?php esc_html_e( 'Close Icon Color', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
+							</th>
+							
+							<td>
+								<?php $this->render_close_icon_color_field(); ?>
+							</td>
+						</tr>
+							
+						<!-- Menu Background Color -->
+						<tr>
+							<th scope="row">
+								<?php esc_html_e( 'Menu Background Color', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
+							</th>
+							
+							<td>
+								<?php $this->render_menu_bg_color_field(); ?>
+							</td>
+						</tr>
+							
+						<!-- Menu Text Color -->
+						<tr>
+							<th scope="row">
+								<?php esc_html_e( 'Menu Text Color', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
+							</th>
+							
+							<td>
+								<?php $this->render_text_color_field(); ?>
+							</td>
+						</tr>
+							
+						<!-- Menu Font Size -->
+						<tr>
+							<th scope="row">
+								<?php esc_html_e( 'Menu Font Size (px)', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
+							</th>
+							
+							<td>
+								<?php $this->render_font_size_field(); ?>
+							</td>
+						</tr>
+							
+						<!-- Menu Font Weight -->
+						<tr>
+							<th scope="row">
+								<?php esc_html_e( 'Menu Font Weight', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
+							</th>
+							
+							<td>
+								<?php $this->render_font_weight_field(); ?>
+							</td>
+						</tr>
+
+						<!-- Hamburger Icon Style -->
+						<tr>
+							<th scope="row">
+								<?php esc_html_e( 'Hamburger Icon Style', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
+							</th>
+										
+							<td>
+								
+								<?php $this->pro_field_start( 'prdsm-pro-hamburger-icon-style' ); ?>
+
+									<?php $this->render_hamburger_style_field(); ?>
+									<?php $this->render_pro_badge(); ?>
+
+								<?php $this->pro_field_end(); ?>
+
+							</td>
+						</tr>
+
+						<!-- Overlay Color -->
+						<tr>
+							<th scope="row">
+								<?php esc_html_e(
+									'Overlay Color',
+									'pixelrome-slide-in-mobile-menu-for-divi'
+								); ?>
+							</th>
+
+							<td>
+								
+								<?php $this->pro_field_start( 'prdsm-pro-overlay-color' ); ?>
+
+									<?php $this->render_overlay_color_field(); ?>
+									<?php $this->render_pro_badge(); ?>
+
+								<?php $this->pro_field_end(); ?>
+
+							</td>
+						</tr>
+
+						<!-- Overlay Opacity -->
+						<tr>
+							<th scope="row">
+								<?php esc_html_e(
+									'Overlay Opacity',
+									'pixelrome-slide-in-mobile-menu-for-divi'
+								); ?>
+							</th>
+
+							<td>
+								
+								<?php $this->pro_field_start(); ?>
+
+									<?php $this->render_overlay_opacity_field(); ?>
+									<?php $this->render_pro_badge(); ?>
+												
+								<?php $this->pro_field_end(); ?>
+
+							</td>
+						</tr>
+							
+					</table>
+							
+				</div>
+							
+			</div>
+
+			<!-- Animation Settings Section -->
+			<div class="prdsm-admin-section">
+
+				<button
+					type="button"
+					class="prdsm-admin-section-toggle"
+					aria-expanded="false"
+				>
+					<span class="prdsm-admin-section-title">
+						<?php esc_html_e(
+							'Animation Settings',
+							'pixelrome-slide-in-mobile-menu-for-divi'
+						); ?>
+					</span>
+
+					<span class="prdsm-admin-section-icon"></span>
+				</button>
+
+				<div class="prdsm-admin-section-content">
+
+					<table class="form-table" role="presentation">
+
+						<tr>
+							<th scope="row">
+								<?php esc_html_e(
+									'Animation Speed',
+									'pixelrome-slide-in-mobile-menu-for-divi'
+								); ?>
+							</th>
+
+							<td>
+								
+								<?php $this->pro_field_start( 'prdsm-pro-animation-speed' ); ?>
+
+									<?php $this->render_animation_speed_field(); ?>
+									<?php $this->render_pro_badge(); ?>
+
+								<?php $this->pro_field_end(); ?>
+							</td>
+						</tr>
+
+					</table>
+
+				</div>
+
+			</div>
+
 		</div>
 
 		<?php

@@ -24,6 +24,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	const hamburger = document.createElement("button");
 	hamburger.id = "prdsm-hamburger";
+
+	/**
+	 * Add selected hamburger style class.
+	 */
+	if (
+		typeof prdsmSettings !== "undefined" &&
+		prdsmSettings.hamburgerStyle
+	) {
+		hamburger.classList.add(
+			'prdsm-hamburger-style-' +
+			prdsmSettings.hamburgerStyle
+		);
+	}
+
+	/**
+	 * Add slide direction class to hamburger trigger.
+	 */
+	hamburger.classList.add(
+		"prdsm-direction-" + prdsmSettings.slideDirection
+	);
 	hamburger.setAttribute("type", "button");
 	hamburger.setAttribute("aria-label", openLabel);
 	hamburger.setAttribute("aria-expanded", "false");
@@ -49,12 +69,61 @@ document.addEventListener("DOMContentLoaded", function () {
 	// -------------------------------------
 
 	function positionHamburger() {
-		if (!header) return; // fallback if no header found
+
+		if ( ! header ) {
+			return;
+		}
+
+		/**
+		 * Detect active Divi sticky header state.
+		 */
+		const stickyActive = document.querySelector(
+			'.et_pb_sticky'
+		);
+
+		/**
+		 * When sticky header is active,
+		 * lock hamburger to fixed top position.
+		 */
+		if ( stickyActive ) {
+
+			/**
+			 * Get active sticky header dimensions.
+			 */
+			const stickyRect =
+				stickyActive.getBoundingClientRect();
+				
+			const hamburgerHeight =
+				hamburger.offsetHeight;
+				
+			/**
+			 * Vertically center hamburger
+			 * inside sticky header.
+			 */
+			const stickyTopPosition =
+				stickyRect.top +
+				( stickyRect.height / 2 ) -
+				( hamburgerHeight / 2 );
+				
+			hamburger.style.top =
+				stickyTopPosition + 'px';
+				
+			return;
+		}
+
+		/**
+		 * Normal non-sticky positioning.
+		 */
 		const headerRect = header.getBoundingClientRect();
+
 		const hamburgerHeight = hamburger.offsetHeight;
 
-		const topPosition = headerRect.top + (headerRect.height / 2) - (hamburgerHeight / 2);
-		hamburger.style.top = topPosition + "px";
+		const topPosition =
+			headerRect.top +
+			( headerRect.height / 2 ) -
+			( hamburgerHeight / 2 );
+
+		hamburger.style.top = topPosition + 'px';
 	}
 
 	positionHamburger();
@@ -148,13 +217,17 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 	});
 
-	if (typeof prdsmSettings !== "undefined" && prdsmSettings.closeOnClick === 1) {
-		menu.addEventListener("click", function (e) {
-			if (e.target.closest("a")) {
-				closeMenu();
-			}
-		});
-	}
+	const menuLinks = menu.querySelectorAll( 'a' );
+
+	menuLinks.forEach( function( link ) {
+	
+		link.addEventListener( 'click', function() {
+		
+			closeMenu();
+		
+		} );
+	
+	} );
 
 	// -------------------------------------
 	// Dropdown Handling

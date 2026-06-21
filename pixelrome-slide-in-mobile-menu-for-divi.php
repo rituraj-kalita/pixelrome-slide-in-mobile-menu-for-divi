@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name: PIXELROME – Slide-In Mobile Menu for Divi
- * Plugin URI: https://pixelrome.com/plugins/slide-in-mobile-menu-for-divi
- * Description: Adds a smooth right-to-left slide-in mobile menu for the Divi theme.
- * Version: 1.0.1
+ * Plugin URI: https://pixelrome.com
+ * Description: Premium slide-in mobile menu enhancements for Divi theme.
+ * Version: 1.0.0
  * Requires at least: 5.8
  * Requires PHP: 7.4
  * Tested up to: 7.0
@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Define Plugin Constants
  */
 if ( ! defined( 'PRDSM_VERSION' ) ) {
-	define( 'PRDSM_VERSION', '1.0.1' );
+	define( 'PRDSM_VERSION', '1.0.0' );
 }
 
 if ( ! defined( 'PRDSM_PLUGIN_FILE' ) ) {
@@ -38,7 +38,6 @@ if ( ! defined( 'PRDSM_URL' ) ) {
 	define( 'PRDSM_URL', plugin_dir_url( __FILE__ ) );
 }
 
-
 /**
  * Prevent Lite version from loading if Pro is active.
  */
@@ -52,6 +51,7 @@ if ( is_plugin_active( $prdsmpro_plugin ) ) {
 
 	deactivate_plugins( plugin_basename( __FILE__ ), true );
 	
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reading activation flag only to suppress activation notice.
 	if ( isset( $_GET['activate'] ) ) {
 		unset( $_GET['activate'] );
 	}

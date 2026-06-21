@@ -1,10 +1,9 @@
-# OS
+# SVN
+.svn/
+
+# OS files
 .DS_Store
 Thumbs.db
-
-# IDE
-.vscode/
-.idea/
 
 # Logs
 *.log
@@ -15,12 +14,10 @@ node_modules/
 # Composer
 vendor/
 
-# Environment
-.env
+# IDE
+.vscode/
+.idea/
 
-# SVN
-.svn/
-
-# Mac metadata
-.AppleDouble
-.LSOverride
+# Build files
+dist/
+build/

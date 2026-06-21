@@ -4,7 +4,7 @@ Tags: divi, mobile menu, off canvas, slide menu, responsive menu
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -53,7 +53,7 @@ No. This plugin is designed specifically for the Divi theme.
 
 = Does this replace the default Divi mobile menu? =
 
-Yes. It hides the default Divi mobile hamburger and replaces it with a slide-in panel. 
+Yes. It hides the default Divi mobile hamburger and replaces it with a slide-in panel.
 
 = Can I customize the animation direction? =
 
@@ -66,11 +66,6 @@ Right-to-left animation is included in Lite. Additional directions will be avail
 3. Plugin settings panel in WordPress admin
 
 == Changelog ==
-
-= 1.0.1 =
-* Improved hamburger menu touch and click reliability on mobile devices.
-* Improved plugin activation behavior when Pro version is active.
-* Tested compatibility with WordPress 7.0.
 
 = 1.0.0 =
 * Initial release

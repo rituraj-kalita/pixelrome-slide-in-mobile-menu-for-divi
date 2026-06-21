@@ -10,11 +10,19 @@
 #prdsm-overlay {
 	position: fixed;
 	inset: 0;
-	background: rgba(0, 0, 0, 0.6);
+	background: transparent;
 	opacity: 0;
 	visibility: hidden;
-	transition: opacity 0.3s ease, visibility 0.3s ease;
-	z-index: 100000;
+	transition:
+	opacity var(
+		--prdsm-animation-speed,
+		300ms
+	) ease,
+	visibility var(
+		--prdsm-animation-speed,
+		300ms
+	) ease;
+	z-index: 99999;
 }
 
 #prdsm-overlay.active {
@@ -27,22 +35,44 @@
    2. Slide Panel
    ====================================================== */
 
+/* ==========================================================================
+   Slide Menu Container
+========================================================================== */
+
 #prdsm-slide-menu {
 	position: fixed;
 	top: 0;
-	right: 0;
+	width: 300px;
+	max-width: 90%;
 	height: 100vh;
-	max-width: 80%;
+
+	background: #333;
+
+	z-index: 99999;
 	overflow-y: auto;
 
-	padding: var(--prdsm-inner-padding, 30px);
+	transition:
+	transform var(
+		--prdsm-animation-speed,
+		300ms
+	) ease;
+}
+
+/* ==========================================================================
+   Right Direction
+   Menu slides from right side
+========================================================================== */
+
+#prdsm-slide-menu.prdsm-direction-right {
+	right: 0;
+	left: auto;
 
 	transform: translate3d(100%, 0, 0);
-	transition: transform 0.75s cubic-bezier(.25, 1, .5, 1);
-	will-change: transform;
-
-	z-index: 100001;
 }
+
+/* ==========================================================================
+   Active Menu State
+========================================================================== */
 
 #prdsm-slide-menu.active {
 	transform: translate3d(0, 0, 0);
@@ -64,16 +94,11 @@ body.prdsm-lock {
    4. Hamburger Button
    ====================================================== */
 
-/* Hide Divi default mobile hamburger */
-.mobile_menu_bar {
-	visibility: hidden !important;
-	pointer-events: none !important;
-}
 
 #prdsm-hamburger {
-	position: fixed;
+    position: fixed;
     top: 20px;
-    right: 20px;
+	right: 20px;
     width: 48px;
     height: 48px;
     padding: 0;
@@ -91,9 +116,10 @@ body.prdsm-lock {
     text-align: center;
 }
 
+
 /* Hamburger bars */
 #prdsm-hamburger span {
-	transition: transform 0.6s cubic-bezier(.25, 1, .5, 1), opacity 0.3s ease;
+    transition: transform 0.6s cubic-bezier(.25, 1, .5, 1), opacity 0.3s ease;
     display: block;
     width: 32px;
     height: 3px;
@@ -102,7 +128,7 @@ body.prdsm-lock {
     margin-bottom: 7px;
 }
 
-#prdsmpro-hamburger span:last-child {
+#prdsm-hamburger span:last-child {
     margin-bottom: 0;
 }
 
@@ -117,6 +143,27 @@ body.prdsm-lock {
 
 #prdsm-hamburger.active span:nth-child(3) {
 	transform: translateY(-10px) rotate(-45deg);
+}
+
+/* ==========================================================
+   Hamburger Icon Styles
+========================================================== */
+
+/* ------------------------------------------
+   Split Style
+------------------------------------------ */
+
+.prdsm-hamburger-style-split span:nth-child(2) {
+	width: 60%;
+	margin-left: auto;
+}
+
+/* ------------------------------------------
+   Split Style Hover
+------------------------------------------ */
+
+.prdsm-hamburger-style-split:hover span {
+	transform: scaleX(1.04);
 }
 
 
@@ -137,8 +184,15 @@ body.prdsm-lock {
 	margin-bottom: var(--prdsm-item-spacing, 12px);
 }
 
+#prdsm-slide-menu .prdsm-menu-list {
+	padding-top: 100px;
+	padding-left: 24px;
+	padding-right: 24px;
+	margin: 0;
+}
+
 #prdsm-slide-menu #menu-main-menu {
-	margin-top: 40px;
+	margin: 0;
 }
 
 
@@ -207,20 +261,12 @@ ul.sub-menu.active li:last-child {
 }
 
 
-/* ======================================================
-   8. Responsive Behavior
-   ====================================================== */
 
-@media (max-width: 980px) {
+/* ==========================================================
+   Hamburger Icon Styles
+========================================================== */
 
-	#prdsm-hamburger {
-		display: flex;
-	}
-
-	/* Hide Divi default hamburger (again for safety) */
-	.mobile_menu_bar {
-		visibility: hidden !important;
-		pointer-events: none !important;
-	}
-
+/* Classic */
+.prdsm-hamburger-style-classic span {
+	border-radius: 2px;
 }
