@@ -152,6 +152,7 @@
 ========================================================== */
 
 .prdsm-range-control {
+	width: 420px;
 	max-width: 420px;
 	padding-top: 2px;
 }
@@ -361,19 +362,26 @@
 }
 
 /* ==========================================================================
-   Pro Badge
+   Pro Locked Fields
 ========================================================================== */
-.prdsm-admin-section-content table.form-table td .prdsm-pro-field {
-    position: relative;
+
+.prdsm-pro-field {
+	position: relative;
+	opacity: 0.5;
+	pointer-events: none;
 }
 
-.prdsm-admin-section-content table.form-table .prdsm-pro-field.prdsm-pro-field.prdsm-pro-slide-direction,
-.prdsm-admin-section-content table.form-table .prdsm-pro-field.prdsm-pro-field.prdsm-pro-hamburger-icon-style
+/* ==========================================================================
+   Pro Badge
+========================================================================== */
+
+.prdsm-admin-section-content table.form-table .prdsm-pro-field.prdsm-pro-slide-direction,
+.prdsm-admin-section-content table.form-table .prdsm-pro-field.prdsm-pro-hamburger-icon-style
 {
     max-width: 250px;
 }
 
-.prdsm-admin-section-content table.form-table .prdsm-pro-field.prdsm-pro-field.prdsm-pro-overlay-color {
+.prdsm-admin-section-content table.form-table .prdsm-pro-field.prdsm-pro-overlay-color {
 	max-width: 150px;
 }
 
@@ -393,13 +401,13 @@
     background: #F59E0B;
 }
 
-/* ==========================================================================
-   Pro Locked Fields
-========================================================================== */
-
-.prdsm-pro-field {
-	position: relative;
-	opacity: 0.5;
-	pointer-events: none;
+.prdsm-pro-field.prdsm-pro-overlay-opacity {
+    max-width: 80%;
 }
+
+.prdsm-pro-field.prdsm-pro-overlay-opacity .prdsm-pro-badge {
+    left: 70%;
+}
+
+
 

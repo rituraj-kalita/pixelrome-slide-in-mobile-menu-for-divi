@@ -337,57 +337,19 @@ class PRDSM_Admin {
 	 * @return void
 	 */
 	public function render_overlay_opacity_field() {
-
-		$options = $this->get_settings();
-
-		$opacity = isset( $options['overlay_opacity'] )
-			? absint( $options['overlay_opacity'] )
-			: 60;
-
-		?>
-
-		<div class="prdsm-range-control">
-
-			<input
-				type="range"
-				min="0"
-				max="100"
-				step="1"
-				class="prdsm-range-slider"
-				id="prdsm-overlay-opacity-slider"
-				name="<?php echo esc_attr( $this->option_name ); ?>[overlay_opacity]"
-				value="<?php echo esc_attr( $opacity ); ?>"
-			/>
-
-			<div class="prdsm-range-values">
-
-				<span>0%</span>
-
-				<div class="prdsm-breakpoint-input-wrap">
-
-					<input
-						type="number"
-						min="0"
-						max="100"
-						step="1"
-						class="prdsm-breakpoint-input"
-						id="prdsm-overlay-opacity-input"
-						value="<?php echo esc_attr( $opacity ); ?>"
-					/>
-
-					<span class="prdsm-breakpoint-unit">
-						%
-					</span>
-
-				</div>
-
-				<span>100%</span>
-
-			</div>
-
-		</div>
-
-		<?php
+	    ?>
+	    <input
+	        type="range"
+	        min="0"
+	        max="100"
+	        step="1"
+	        class="prdsm-range-slider"
+	        id="prdsm-overlay-opacity-slider"
+	        name="<?php echo esc_attr( $this->option_name ); ?>[overlay_opacity]"
+	        value="60"
+	    />
+		
+	    <?php
 	}
 
 	/**
@@ -671,15 +633,6 @@ class PRDSM_Admin {
 			</option>
 
 		</select>
-
-		<p class="description">
-			<?php
-			esc_html_e(
-				'Choose a modern hamburger icon style for the mobile menu toggle.',
-				'pixelrome-slide-in-mobile-menu-for-divi'
-			);
-			?>
-		</p>
 
 		<?php
 	}
@@ -1015,24 +968,6 @@ class PRDSM_Admin {
 							</td>
 						</tr>
 
-						<!-- Hamburger Icon Style -->
-						<tr>
-							<th scope="row">
-								<?php esc_html_e( 'Hamburger Icon Style', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
-							</th>
-										
-							<td>
-								
-								<?php $this->pro_field_start( 'prdsm-pro-hamburger-icon-style' ); ?>
-
-									<?php $this->render_hamburger_style_field(); ?>
-									<?php $this->render_pro_badge(); ?>
-
-								<?php $this->pro_field_end(); ?>
-
-							</td>
-						</tr>
-
 						<!-- Overlay Color -->
 						<tr>
 							<th scope="row">
@@ -1065,11 +1000,29 @@ class PRDSM_Admin {
 
 							<td>
 								
-								<?php $this->pro_field_start(); ?>
+								<?php $this->pro_field_start( 'prdsm-pro-overlay-opacity' ); ?>
 
 									<?php $this->render_overlay_opacity_field(); ?>
 									<?php $this->render_pro_badge(); ?>
 												
+								<?php $this->pro_field_end(); ?>
+
+							</td>
+						</tr>
+
+						<!-- Hamburger Icon Style -->
+						<tr>
+							<th scope="row">
+								<?php esc_html_e( 'Hamburger Icon Style', 'pixelrome-slide-in-mobile-menu-for-divi' ); ?>
+							</th>
+										
+							<td>
+								
+								<?php $this->pro_field_start( 'prdsm-pro-hamburger-icon-style' ); ?>
+
+									<?php $this->render_hamburger_style_field(); ?>
+									<?php $this->render_pro_badge(); ?>
+
 								<?php $this->pro_field_end(); ?>
 
 							</td>
