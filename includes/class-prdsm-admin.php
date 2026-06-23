@@ -681,15 +681,57 @@ class PRDSM_Admin {
 			<?php endif; ?>
 
 			<div class="prdsm-admin-layout">
-				<form method="post" action="options.php">
-					<?php
-					settings_fields( 'prdsm_settings_group' );
-					$this->render_settings_fields();
-					submit_button();
-					?>
-				</form>
 
-				
+				<div class="prdsm-admin-main">
+
+					<form method="post" action="options.php">
+						<?php
+						settings_fields( 'prdsm_settings_group' );
+						$this->render_settings_fields();
+						submit_button();
+						?>
+					</form>
+
+				</div>
+
+				<div class="prdsm-admin-sidebar">
+
+					<div class="prdsm-upgrade-card">
+
+						<span class="prdsm-pro-badge">PRO FEATURES</span>
+
+						<h2>
+							Unlock Advanced Features
+						</h2>
+
+						<p>
+							Unlock additional customization options for menu 
+							behavior, appearance, responsiveness, and future enhancements.
+						</p>
+
+						<ul class="prdsm-upgrade-features">
+
+							<li>✓ Custom Responsive Breakpoints</li>
+							<li>✓ Slide Direction Control</li>
+							<li>✓ Modern Hamburger Styles</li>
+							<li>✓ Overlay Color & Opacity</li>
+							<li>✓ Animation Speed Control</li>
+							<li>✓ Future Premium Features</li>
+
+						</ul>
+
+						<p>
+							<a
+								href="https://pixelrome.com/plugins/slide-in-mobile-menu-for-divi/" target="_blank"
+								class="button button-primary button-large"
+							>
+								Learn More
+							</a>
+						</p>
+
+					</div>
+
+				</div>
 
 			</div>
 		</div>
