@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	const overlay = document.getElementById("prdsm-overlay");
 	const menu    = document.getElementById("prdsm-slide-menu");
-	const header = document.querySelector("#main-header, header");
+	const header = document.querySelector("#main-header, .et-l--header, header");
 
 	if (!overlay || !menu) return;
 
@@ -68,6 +68,29 @@ document.addEventListener("DOMContentLoaded", function () {
 	// Position Hamburger
 	// -------------------------------------
 
+	function getMeasurableHeader( headerEl ) {
+
+		// Divi Theme Builder headers can collapse the outer wrapper to 0
+		// height (e.g. transparent headers using position: absolute).
+		// The section carrying a "_tb_header" class is Divi's own marker
+		// for the actual header content and reliably has real height.
+		const tbHeaderSection = headerEl.querySelector( '[class*="_tb_header"]' );
+
+		const candidates = [
+			tbHeaderSection,
+			headerEl.querySelector( '.et_builder_inner_content' ),
+			headerEl
+		];
+
+		for ( const el of candidates ) {
+			if ( el && el.getBoundingClientRect().height > 0 ) {
+				return el;
+			}
+		}
+
+		return headerEl;
+	}
+
 	function positionHamburger() {
 
 		if ( ! header ) {
@@ -114,7 +137,8 @@ document.addEventListener("DOMContentLoaded", function () {
 		/**
 		 * Normal non-sticky positioning.
 		 */
-		const headerRect = header.getBoundingClientRect();
+		const measurableHeader = getMeasurableHeader( header );
+		const headerRect = measurableHeader.getBoundingClientRect();
 
 		const hamburgerHeight = hamburger.offsetHeight;
 

@@ -722,7 +722,7 @@ class PRDSM_Admin {
 
 						<p>
 							<a
-								href="https://pixelrome.com/plugins/slide-in-mobile-menu-for-divi/" target="_blank"
+								href="https://pixelrome.com/plugins/slide-in-mobile-menu-for-divi-pro/" target="_blank"
 								class="button button-primary button-large"
 							>
 								Learn More
