@@ -4,7 +4,7 @@ Tags: divi, mobile menu, off canvas, slide menu, responsive menu
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,6 +66,11 @@ Right-to-left animation is included in Lite. Additional directions will be avail
 3. Plugin settings panel in WordPress admin
 
 == Changelog ==
+
+= 1.0.3 =
+* Added missing admin CSS and JavaScript files to the plugin package.
+* Fixed broken settings page styling after updating to 1.0.2.
+* Fixed admin settings page functionality.
 
 = 1.0.2 =
 * Refreshed the plugin settings interface.
