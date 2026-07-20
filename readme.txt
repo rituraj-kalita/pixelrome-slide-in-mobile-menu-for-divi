@@ -4,7 +4,7 @@ Tags: divi, mobile menu, off canvas, slide menu, responsive menu
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,9 +67,20 @@ Right-to-left animation is included in Lite. Additional directions will be avail
 
 == Changelog ==
 
+= 1.0.2 =
+* Refreshed the plugin settings interface.
+* Added a Pro upgrade promotion panel to the settings page.
+* Enhanced the overall settings page user experience.
+* Minor bug fixes and code improvements.
+
+= 1.0.1 =
+* Improved hamburger menu touch and click reliability on mobile devices.
+* Improved plugin activation behavior when Pro version is active.
+* Tested compatibility with WordPress 7.0.
+
 = 1.0.0 =
-* Initial release
-* Slide-in mobile menu
-* Dropdown support
-* Custom styling options
-* Accessibility improvements
+* Initial release.
+* Slide-in mobile menu.
+* Dropdown support.
+* Custom styling options.
+* Accessibility improvements.

@@ -3,7 +3,7 @@
  * Plugin Name: PIXELROME – Slide-In Mobile Menu for Divi
  * Plugin URI: https://pixelrome.com
  * Description: Premium slide-in mobile menu enhancements for Divi theme.
- * Version: 1.0.0
+ * Version: 1.0.2
  * Requires at least: 5.8
  * Requires PHP: 7.4
  * Tested up to: 7.0
@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Define Plugin Constants
  */
 if ( ! defined( 'PRDSM_VERSION' ) ) {
-	define( 'PRDSM_VERSION', '1.0.0' );
+	define( 'PRDSM_VERSION', '1.0.2' );
 }
 
 if ( ! defined( 'PRDSM_PLUGIN_FILE' ) ) {
