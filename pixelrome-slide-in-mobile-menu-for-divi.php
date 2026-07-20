@@ -45,6 +45,7 @@ if ( ! function_exists( 'is_plugin_active' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/plugin.php';
 }
 
+
 $prdsmpro_plugin = 'slide-in-mobile-menu-for-divi-pro/slide-in-mobile-menu-for-divi-pro.php';
 
 if ( is_plugin_active( $prdsmpro_plugin ) ) {
