@@ -4,7 +4,7 @@ Tags: divi, mobile menu, off canvas, slide menu, responsive menu
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,6 +66,11 @@ Right-to-left animation is included in Lite. Additional directions will be avail
 3. Plugin settings panel in WordPress admin
 
 == Changelog ==
+
+= 1.0.4 =
+* Fixed an issue where nested submenu items could be clipped when deeper menu levels were expanded.
+* Improved nested submenu height handling while preserving the existing expand/collapse animation.
+* Improved support for multi-level navigation menus.
 
 = 1.0.3 =
 * Added missing admin CSS and JavaScript files to the plugin package.

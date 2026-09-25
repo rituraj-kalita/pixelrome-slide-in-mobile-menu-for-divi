@@ -310,11 +310,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
 			} else {
 
-				submenu.classList.add("active");
-				submenu.style.maxHeight = submenu.scrollHeight + "px";
-
-				toggleBtn.classList.add("active");
-				toggleBtn.setAttribute("aria-expanded", "true");
+			    submenu.classList.add("active");
+			    submenu.style.maxHeight = submenu.scrollHeight + "px";
+						
+			    /*
+			     * Allow all open ancestor submenus to grow freely
+			     * when a deeper submenu is opened.
+			     */
+			    let ancestorSubmenu = submenu.parentElement.closest(".sub-menu.active");
+						
+			    while (ancestorSubmenu) {
+			        ancestorSubmenu.style.maxHeight = "none";
+			        ancestorSubmenu = ancestorSubmenu.parentElement.closest(".sub-menu.active");
+			    }
+			
+			    toggleBtn.classList.add("active");
+			    toggleBtn.setAttribute("aria-expanded", "true");
 			}
 		});
 
