@@ -6,7 +6,7 @@
  * Version: 1.0.4
  * Requires at least: 5.8
  * Requires PHP: 7.4
- * Tested up to: 7.0
+ * Tested up to: 7.1.2
  * Author: PIXELROME
  * Author URI: https://pixelrome.com
  * License: GPLv2 or later
